@@ -1,9 +1,14 @@
+import sys
+import os
 import pandas as pd
 import re
 import json
-import os
-from backend.database import get_session, Activity
 import logging
+
+# Add backend directory to the sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend')))
+
+from database import get_session, Activity  # Now import using just 'database' and 'Activity' as the backend module path is set
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
