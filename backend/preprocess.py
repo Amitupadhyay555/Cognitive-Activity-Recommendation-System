@@ -1,15 +1,15 @@
 import sys
 import os
 
-# Ensure backend directory is in the sys.path (this is required if you're running preprocess.py from the root)
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'backend')))
+# Add the parent directory to sys.path so the 'backend' package can be found
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import pandas as pd
 import re
 import json
 import logging
 
-from database import get_session, Activity  # Now import using just 'database' and 'Activity'
+from backend.database import get_session, Activity  # Import from 'backend'
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
