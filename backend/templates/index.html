@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognitive Activity Recommendation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            margin: 0 auto;
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cognitive Activity Recommendation System</h1>
+    <form id="recommendationForm">
+        <label for="category">Category:</label>
+        <select id="category" name="category" required>
+            <option value="">Select Category</option>
+            <option value="Visualization">Visualization</option>
+            <option value="Memory">Memory</option>
+            <option value="Association">Association</option>
+            <option value="Reasoning">Reasoning</option>
+        </select><br>
+
+        <label for="zone">Zone (optional):</label>
+        <select id="zone" name="zone">
+            <option value="">Select Zone (Optional)</option>
+            <option value="Green">Green</option>
+            <option value="Yellow">Yellow</option>
+            <option value="Red">Red</option>
+        </select><br>
+
+        <label for="age_range">Age Range (optional):</label>
+        <select id="age_range" name="age_range">
+            <option value="">Select Age Range (Optional)</option>
+            <option value="5-13">5-13</option>
+            <option value="14-18">14-18</option>
+            <option value="19-33">19-33</option>
+            <option value="34-48">34-48</option>
+            <option value="49-64">49-64</option>
+            <option value="64+">64+</option>
+            <option value="31-50">31-50</option>
+            <option value="18-30">18-30</option>
+            <option value="65-78">65-78</option>
+        </select><br>
+
+        <button type="submit">Get Recommendations</button>
+    </form>
+
+    <div id="result" class="results"></div>
+
+    <script>
+        document.getElementById('recommendationForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+    
+            const category = document.getElementById('category').value;
+            const zone = document.getElementById('zone').value;
+            const age_range = document.getElementById('age_range').value;
+    
+            if (!category) {
+                alert('Category is required');
+                return;
+            }
+    
+            // Construct URL with query parameters
+            const url = new URL('http://127.0.0.1:5000/recommendations');
+            const params = { category, zone, age_range };
+    
+            // Remove any parameters with empty values
+            Object.keys(params).forEach(key => params[key] === '' && delete params[key]);
+    
+            fetch(`${url}?${new URLSearchParams(params).toString()}`)
+                .then(response => response.json())
+                .then(data => {
+                    let output = '<h2>Recommended Activities</h2>';
+    
+                    if (data.error) {
+                        output = `<p>${data.error}</p>`;
+                    } else {
+                        data.forEach(activity => {
+                            output += 
+                                `<div>
+                                    <h3>${activity.name}</h3>
+                                    <p><strong>Description:</strong> ${activity.description}</p>
+                                    <p><strong>Zone:</strong> ${activity.zone}</p>
+                                    <p><strong>Age Range:</strong> ${activity.age_range}</p>
+                                    <p><strong>Objective:</strong> ${activity.objective}</p>
+                                    <p><strong>Time Required:</strong> ${activity.time_required} minutes</p>
+                                    <p><strong>Instructions:</strong> ${activity.instructions}</p>
+                                </div>`;
+                        });
+                    }
+    
+                    document.getElementById('result').innerHTML = output;
+                })
+                .catch(error => {
+                    document.getElementById('result').innerHTML = `<p>Error fetching data: ${error}</p>`;
+                });
+        });
+    </script>
+</body>
+</html>
+
