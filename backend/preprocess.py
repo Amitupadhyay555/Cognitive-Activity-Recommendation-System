@@ -1,18 +1,15 @@
 import sys
 import os
 
-# Add the parent directory of the script to the sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend')))
-
-
-
+# Ensure backend directory is in the sys.path (this is required if you're running preprocess.py from the root)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'backend')))
 
 import pandas as pd
 import re
 import json
 import logging
 
-from database import get_session, Activity  # Now import using just 'database' and 'Activity' as the backend module path is set
+from database import get_session, Activity  # Now import using just 'database' and 'Activity'
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
